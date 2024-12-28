@@ -100,11 +100,26 @@
       }
     }
 
-    
-
     .inventory {
-      width: 160px;
+      width: 250px;
       border-right: 1px solid rgba(172, 255, 47, 0.2);
+
+      .supplies{
+        width: 100%;
+
+        .supply-item{
+          display: flex;
+          justify-content: space-between;
+          padding: 5px;
+          border-bottom: 1px solid rgba(172, 255, 47, 0.2);
+          .supply-name{
+            font-size: large;
+          }
+          .supply-qty{
+            font-size: large;
+          }
+        }
+      }
     }
 
     .actions {

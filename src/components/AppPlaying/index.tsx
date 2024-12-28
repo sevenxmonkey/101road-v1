@@ -1,7 +1,7 @@
 import { useDataStore } from "../../context/DataStoreContext";
 import './AppPlaying.scss';
 const AppPlaying = () => {
-  const { player, endGame, logs, driveNext } = useDataStore();
+  const { player, inventory, endGame, logs, driveNext, consumeSupply } = useDataStore();
   return (
     <div className="playing-container">
       <div className="status">
@@ -26,13 +26,17 @@ const AppPlaying = () => {
       <div className="control">
         <div className="inventory">
           <div className="weapons">
-            {player.inventory.weapons.map(({ weapon, quantity }, index) => (
+            {inventory.weapons.map(({ weapon, quantity }, index) => (
               <div key={index}>{weapon.name} - {weapon.ap} (${quantity})</div>
             ))}
           </div>
-          <div>
-            {player.inventory.supplies.map(({ supply, quantity }, index) => (
-              <div key={index}>{supply.name} - {supply.hp} (${quantity})</div>
+          <div className="supplies">
+            {inventory.supplies.map(({ supply, quantity }, index) => (
+              <div className="supply-item" key={index} onClick={() => consumeSupply(supply.id)}>
+                {supply.name}
+                <span style={{ color: 'green' }}>+{supply.hp}</span>
+                <span style={{ color: "white" }}>[{quantity}]</span>
+              </div>
             ))}
           </div>
         </div>

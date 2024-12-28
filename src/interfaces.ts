@@ -6,6 +6,12 @@ export interface DataStoreContextType {
   /* Player Actions */
   player: Player;
   driveNext: () => void;
+  consumeSupply: (supplyId: string) => void;
+  /* Inventory */
+  inventory: {
+    weapons: { weapon: Weapon; quantity: number }[];
+    supplies: { supply: Supply; quantity: number }[];
+  }
   /* Logs */
   logs: Event[];
 }
@@ -23,11 +29,6 @@ export interface Player {
   hp: number; /* Health Points */
   xp: number; /* Experience Points */
   ap: number; /* Attack Points */
-  /* Player Inventory */
-  inventory: {
-    weapons: { weapon: Weapon; quantity: number }[];
-    supplies: { supply: Supply; quantity: number }[];
-  };
   equipped?: Weapon;
   currentLocation: Location;
 }
@@ -69,6 +70,9 @@ export interface Event {
     DeductHPEvent?: {
       hp: number;
     },
+    ConsumeSupplyEvent?: {
+      supply: Supply;
+    }
   }
 }
 

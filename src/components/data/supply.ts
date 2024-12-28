@@ -46,7 +46,7 @@ const DATA_SUPPLIES_FOOD: Supply[] = [
   },
   {
     id: "food_008",
-    name: "MRE (Meal Ready-to-Eat)",
+    name: "Factory Meal",
     hp: 25,
     description: "A military-grade survival meal. Highly effective at restoring health and hunger."
   },
@@ -59,7 +59,7 @@ const DATA_SUPPLIES_FOOD: Supply[] = [
   {
     id: "food_010",
     name: "Rotten Fruit",
-    hp: -5,
+    hp: 5,
     description: "Spoiled and potentially harmful. Eating this could reduce health instead of restoring it."
   },
   {

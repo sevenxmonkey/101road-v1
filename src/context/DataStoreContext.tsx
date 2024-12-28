@@ -1,14 +1,11 @@
 import React, { createContext, useContext, ReactNode, useState } from 'react';
 import { DataStoreContextType, GameStatus, Player, Event, EventType } from '../interfaces';
 import { DATA_LOCATIONS } from '../components/data/location';
+import { generateRandomSupplies } from '../components/data/supply';
 
 const initialPlayer: Player = {
   name: 'Seven X',
   hp: 100, xp: 0, ap: 20,
-  inventory: {
-    weapons: [],
-    supplies: [],
-  },
   currentLocation: DATA_LOCATIONS[0],
 }
 
@@ -17,6 +14,10 @@ const DataStoreContext = createContext<DataStoreContextType | undefined>(undefin
 export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const [player, setPlayer] = useState(initialPlayer);
+  const [inventory, setInventory] = useState({
+    weapons: [],
+    supplies: generateRandomSupplies()
+  });
   const [gameStatus, setGameStatus] = useState(GameStatus.MainMenu);
   const [logs, setLogs] = useState<Event[]>([]);
 
@@ -29,6 +30,7 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     setPlayer(initialPlayer);
     setGameStatus(GameStatus.MainMenu);
     setLogs([]);
+    setInventory({ weapons: [], supplies: generateRandomSupplies() })
   }
 
   const driveNext = () => {
@@ -68,16 +70,43 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     setLogs([...logs, ...events]);
   }
 
+  const consumeSupply = (supplyId: string) => {
+    const supply = inventory.supplies.find(s => s.supply.id === supplyId);
+    if (supply) {
+      // Deduct the supply from the inventory
+      const newSupplies = inventory.supplies.map(s => {
+        if (s.supply.id === supplyId) {
+          return { supply: s.supply, quantity: supply.quantity - 1 }
+        }
+        return s;
+      }).filter(s => s.quantity > 0);
+      setInventory({ ...inventory, supplies: newSupplies });
+      // Restore player HP
+      const newHp = Math.min(player.hp + supply.supply.hp, 100);
+      setPlayer({ ...player, hp: newHp });
+
+      // Add a log for this event
+      const consumeSupplyEvent: Event = {
+        type: EventType.ConsumeSupply,
+        message: `Consuming ${supply.supply.name} for ${supply.supply.hp} HP`,
+        data: { ConsumeSupplyEvent: { supply: supply.supply } }
+      }
+      setLogs([...logs, consumeSupplyEvent]);
+    }
+  }
+
   const contextValue: DataStoreContextType = {
     // Data
     player,
+    inventory,
     gameStatus,
     // logs
     logs,
     // Game Actions
     startGame,
     endGame,
-    driveNext
+    driveNext,
+    consumeSupply,
   };
 
   return (
