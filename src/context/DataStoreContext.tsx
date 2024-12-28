@@ -1,7 +1,5 @@
-import React, { createContext, useContext, ReactNode } from 'react';
-import { DataStoreContextType, Player, Supply, Weapon, } from '../interfaces';
-
-const DataStoreContext = createContext<DataStoreContextType | undefined>(undefined);
+import React, { createContext, useContext, ReactNode, useState } from 'react';
+import { DataStoreContextType, GameStatus, Player, Supply, Weapon, Location } from '../interfaces';
 
 const initalWeapons: Weapon[] = [
   { name: 'Fist', ap: 1 },
@@ -14,7 +12,7 @@ const initalSupplies: Supply[] = [
   { name: 'Bandage', hp: 5 },
   { name: 'Medkit', hp: 25 },
 ]
-const initialLocations = [
+const initialLocations: Location[] = [
   {
     name: 'Town 1',
     description: 'This is the first town',
@@ -56,13 +54,59 @@ const initialPlayer: Player = {
   equipped: { name: 'Fist', ap: 1 },
   currentLocation: initialLocations[0],
 }
+const initialGameState = {
+  Player: initialPlayer,
+  GameStatus: GameStatus.MainMenu,
+  Locations: initialLocations,
+}
+
+const DataStoreContext = createContext<DataStoreContextType | undefined>(undefined);
 
 export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [gameState, setGameState] = useState(initialGameState);
+
+  const startGame = () => {
+    setGameState({
+      ...initialGameState,
+      GameStatus: GameStatus.Playing,
+    });
+  }
+
+  const endGame = () => {
+    setGameState({
+      ...initialGameState,
+      GameStatus: GameStatus.MainMenu,
+    });
+  }
+
+  const gameVictory = () => {
+    setGameState({
+      ...initialGameState,
+      GameStatus: GameStatus.Victory,
+    });
+  }
+
+  const driveNext = () => {
+    const currentLocationIndex = initialLocations.indexOf(gameState.Player.currentLocation);
+    if (currentLocationIndex === initialLocations.length - 1) {
+      gameVictory();
+    } else {
+      setGameState({
+        ...gameState,
+        Player: {
+          ...gameState.Player,
+          currentLocation: initialLocations[currentLocationIndex + 1],
+        },
+      });
+    }
+
+  }
 
   const contextValue: DataStoreContextType = {
-    GameStatus: 'mainMenu',
-    Player: initialPlayer,
-    Locations: initialLocations,
+    GameState: gameState,
+    startGame,
+    endGame,
+    driveNext
   };
 
   return (

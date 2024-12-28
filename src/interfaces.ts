@@ -1,7 +1,23 @@
 export interface DataStoreContextType {
+  GameState: GameState;
+  /* Game Actions */
+  startGame: () => void;
+  endGame: () => void;
+  /* Player Actions */
+  driveNext: () => void;
+}
+
+export interface GameState {
   Player: Player;
-  GameStatus: 'mainMenu' | 'playing' | 'gameover' | 'victory';
+  GameStatus: GameStatus;
   Locations: Location[];
+}
+
+export enum GameStatus {
+  MainMenu = 'mainMenu',
+  Playing = 'playing',
+  Defeat = 'Defeat',
+  Victory = 'victory',
 }
 
 export interface Player {
