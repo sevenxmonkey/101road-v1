@@ -7,12 +7,11 @@ import AppGameOver from '../AppGaveOver';
 import './App.scss';
 
 const App: React.FC = () => {
-  const { GameState } = useDataStore();
-  const { GameStatus } = GameState;
+  const { gameStatus } = useDataStore();
   const getGameComponent = () => {
-    if (GameStatus === 'mainMenu') {
+    if (gameStatus === 'mainMenu') {
       return <AppMainMenu />;
-    } else if (GameStatus === 'playing') {
+    } else if (gameStatus === 'playing') {
       return <AppPlaying />;
     } else {
       return <AppGameOver />;

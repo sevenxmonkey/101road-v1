@@ -1,16 +1,13 @@
 export interface DataStoreContextType {
-  GameState: GameState;
   /* Game Actions */
+  gameStatus: GameStatus;
   startGame: () => void;
   endGame: () => void;
   /* Player Actions */
+  player: Player;
   driveNext: () => void;
-}
-
-export interface GameState {
-  Player: Player;
-  GameStatus: GameStatus;
-  Locations: Location[];
+  /* Logs */
+  logs: Event[];
 }
 
 export enum GameStatus {
@@ -44,12 +41,35 @@ export interface Location {
   supplyIndex: number;
 }
 
+export enum EventType {
+  Driving = 'driving',
+  Arrived = 'arrived',
+  DeductHP = 'deductHP',
+  Explore = 'explore',
+  ConsumeSupply = 'consumeSupply',
+  FoundSupply = 'foundSupply',
+  FoundWeapon = 'foundWeapon',
+  GameVictory = 'gameVictory',
+  GameDefeat = 'gameDefeat',
+}
+
 export interface Event {
-  name: string;
-  description: string;
-  enemy?: Enemy;
-  supplies?: Supply[];
-  weapons?: Weapon[];
+  type: EventType;
+  message: string;
+  // startTime: number;
+  // endTime: number;
+  data: {
+    DrivingEvent?: {
+      from: Location;
+      to: Location;
+    },
+    ArrivedEvent?: {
+      location: Location;
+    },
+    DeductHPEvent?: {
+      hp: number;
+    },
+  }
 }
 
 export interface Enemy {

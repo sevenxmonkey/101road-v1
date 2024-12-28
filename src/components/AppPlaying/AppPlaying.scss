@@ -53,14 +53,29 @@
   }
 
   .history{
+    padding: 0 10px;
     position: relative;
     top: 160px;
     height: calc(100% - 460px);
+
+    overflow-y: auto;
+
+    color: rgba(255, 255, 255, 0.3);
+    .active{
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /** Hide scrollbar for Chrome, Safari and Opera */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
   }
 
   .control{
     height: 300px;
-    border-top: 1px solid greenyellow;
+    border-top: 1px solid rgba(172, 255, 47, 0.5);
     position: absolute;
     width: 100%;
     bottom: 0;
@@ -73,12 +88,12 @@
         display: block;
         width: 100%;
         border: none;
-        border-bottom: 1px solid greenyellow;
-        border-left: 1px solid greenyellow;
+        border-bottom: 1px solid rgba(172, 255, 47, 0.5);
+        border-left: 1px solid rgba(172, 255, 47, 0.5);
         background-color: transparent;
 
         &.end-game-btn{
-          border-top: 1px solid greenyellow;
+          border-top: 1px solid rgba(172, 255, 47, 0.5);
           position: absolute;
           bottom: 0;
         }
