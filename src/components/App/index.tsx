@@ -9,13 +9,21 @@ import './App.scss';
 const App: React.FC = () => {
   const { GameState } = useDataStore();
   const { GameStatus } = GameState;
-  if (GameStatus === 'mainMenu') {
-    return <AppMainMenu />;
-  } else if (GameStatus === 'playing') {
-    return <AppPlaying />;
-  } else {
-    return <AppGameOver />;
+  const getGameComponent = () => {
+    if (GameStatus === 'mainMenu') {
+      return <AppMainMenu />;
+    } else if (GameStatus === 'playing') {
+      return <AppPlaying />;
+    } else {
+      return <AppGameOver />;
+    }
   }
+  return (
+    <div className='container'>
+      {getGameComponent()}
+    </div>
+  )
+
 };
 
 export default App;

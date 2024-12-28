@@ -28,17 +28,20 @@ export interface Player {
   ap: number; /* Attack Points */
   /* Player Inventory */
   inventory: {
-    weapons: Weapon[];
-    supplies: Supply[];
+    weapons: { weapon: Weapon; quantity: number }[];
+    supplies: { supply: Supply; quantity: number }[];
   };
-  equipped: Weapon;
+  equipped?: Weapon;
   currentLocation: Location;
 }
 
 export interface Location {
+  id: string;
   name: string;
   description: string;
-  event: Event;
+  mileageToSF: number;
+  dangerIndex: number;
+  supplyIndex: number;
 }
 
 export interface Event {
@@ -57,11 +60,15 @@ export interface Enemy {
 }
 
 export interface Weapon {
+  id: string;
   name: string;
-  ap: number; /* Attack Points */
+  description: string;
+  ap: number;
 }
 
 export interface Supply {
+  id: string;
   name: string;
-  hp: number; /* Health Points */
+  hp: number;
+  description: string;
 }

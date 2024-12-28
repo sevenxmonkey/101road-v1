@@ -1,4 +1,34 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
 body {
   background-color: black;
-  color: white;
+  color: greenyellow;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  border: 2px solid greenyellow;
+  height: 100vh;
+  width: 100vw;
+
+}
+
+button {
+  border: 1px solid greenyellow;
+  background-color: black;
+  color: greenyellow;
+  padding: 10px;
+  font-size: medium;
+}
+
+@media (min-width: 600px) {
+  .container {
+    margin: 50px auto;
+    height: 820px;
+    width: 500px;
+  }
 }

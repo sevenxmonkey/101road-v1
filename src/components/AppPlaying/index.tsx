@@ -1,41 +1,42 @@
 import { useDataStore } from "../../context/DataStoreContext";
-
+import './AppPlaying.scss';
 const AppPlaying = () => {
   const { GameState, endGame, driveNext } = useDataStore();
   const { Player } = GameState;
   return (
-    <div className="container">
-      <button onClick={() => endGame()}>End game</button>
-      <div className='player-contaner'>
-        <div>Name: {Player.name}</div>
-        <div>Equipped: {Player.equipped.name} - {Player.equipped.ap} </div>
-        <div>Current location: {Player.currentLocation.name} - {Player.currentLocation.description}</div>
-        <hr></hr>
-        <div>
-          <div>Attribute</div>
-          <div>hp: {Player.hp}</div>
-          <div>xp: {Player.xp}</div>
-          <div>ap: {Player.ap}</div>
+    <div className="playing-container">
+      <div className="status">
+        <div className="player">
+          <div className="player-photo">{Player.name}</div>
+          <div className="player-hp player-point" style={{ width: `calc(${Player.hp}% - 10px)` }}></div>
+          <div className="player-ap player-point" style={{ width: `calc(${Player.ap}% - 10px)` }}></div>
         </div>
-        <hr></hr>
-        <div>
-          <div>Weapons</div>
-          {Player.inventory.weapons.map((weapon, index) => (
-            <div key={index}>{weapon.name} - {weapon.ap}</div>
-          ))}
-          <hr></hr>
-          <div>Supplies</div>
-          {Player.inventory.supplies.map((supply, index) => (
-            <div key={index}>{supply.name} - {supply.hp}</div>
-          ))}
+        <div className="location">
+          <div className="loc-mile">{Player.currentLocation.mileageToSF} miles</div>
+          <div className="loc-name">{Player.currentLocation.name}</div>
+          <div className="loc-desc">{Player.currentLocation.description}</div>
         </div>
       </div>
-      <div className='locations-container'></div>
-      <div className='action-container'>
-        <button onClick={() => driveNext()}>Drive to next town</button>
-        <button>Explore town</button>
+      <div className="history">Player History</div>
+      <div className="control">
+        <div className="inventory">
+          <div className="weapons">
+            {Player.inventory.weapons.map(({ weapon, quantity }, index) => (
+              <div key={index}>{weapon.name} - {weapon.ap} (${quantity})</div>
+            ))}
+          </div>
+          <div>
+            {Player.inventory.supplies.map(({ supply, quantity }, index) => (
+              <div key={index}>{supply.name} - {supply.hp} (${quantity})</div>
+            ))}
+          </div>
+        </div>
+        <div className='actions'>
+          <button className="drive-btn" onClick={() => driveNext()}>Drive to Next Town</button>
+          <button className="explore-btn">Explore Town</button>
+          <button className="end-game-btn" onClick={() => endGame()}>End Journey</button>
+        </div>
       </div>
-      <div>Event logs</div>
     </div>
   );
 }

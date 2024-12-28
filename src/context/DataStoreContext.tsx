@@ -1,63 +1,20 @@
 import React, { createContext, useContext, ReactNode, useState } from 'react';
-import { DataStoreContextType, GameStatus, Player, Supply, Weapon, Location } from '../interfaces';
+import { DataStoreContextType, GameStatus, Player } from '../interfaces';
+import { DATA_LOCATIONS } from '../components/data/location';
 
-const initalWeapons: Weapon[] = [
-  { name: 'Fist', ap: 1 },
-  { name: 'Knife', ap: 5 },
-  { name: 'Sword', ap: 10 },
-  { name: 'Axe', ap: 15 },
-]
-const initalSupplies: Supply[] = [
-  { name: 'Health Potion', hp: 10 },
-  { name: 'Bandage', hp: 5 },
-  { name: 'Medkit', hp: 25 },
-]
-const initialLocations: Location[] = [
-  {
-    name: 'Town 1',
-    description: 'This is the first town',
-    event: {
-      name: 'Town 1 event',
-      description: 'This is the first town event',
-      supplies: initalSupplies,
-      weapons: initalWeapons,
-    },
-  },
-  {
-    name: 'Town 2',
-    description: 'This is the second town',
-    event: {
-      name: 'Town 2 event',
-      description: 'This is the second town event',
-      supplies: initalSupplies,
-      weapons: initalWeapons,
-    },
-  },
-  {
-    name: 'Town 3',
-    description: 'This is the third town',
-    event: {
-      name: 'Town 3 event',
-      description: 'This is the third town event',
-      supplies: initalSupplies,
-      weapons: initalWeapons,
-    },
-  },
-]
 const initialPlayer: Player = {
   name: 'Seven X',
-  hp: 100, xp: 0, ap: 10,
+  hp: 100, xp: 0, ap: 20,
   inventory: {
-    weapons: initalWeapons,
-    supplies: initalSupplies,
+    weapons: [],
+    supplies: [],
   },
-  equipped: { name: 'Fist', ap: 1 },
-  currentLocation: initialLocations[0],
+  currentLocation: DATA_LOCATIONS[0],
 }
 const initialGameState = {
   Player: initialPlayer,
   GameStatus: GameStatus.MainMenu,
-  Locations: initialLocations,
+  Locations: DATA_LOCATIONS,
 }
 
 const DataStoreContext = createContext<DataStoreContextType | undefined>(undefined);
@@ -86,20 +43,32 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     });
   }
 
+  const gameDefeat = () => {
+    setGameState({
+      ...initialGameState,
+      GameStatus: GameStatus.Defeat,
+    });
+  }
+
   const driveNext = () => {
-    const currentLocationIndex = initialLocations.indexOf(gameState.Player.currentLocation);
-    if (currentLocationIndex === initialLocations.length - 1) {
+    const currentLocationIndex = DATA_LOCATIONS.indexOf(gameState.Player.currentLocation);
+    if (currentLocationIndex === DATA_LOCATIONS.length - 1) {
       gameVictory();
     } else {
-      setGameState({
-        ...gameState,
-        Player: {
-          ...gameState.Player,
-          currentLocation: initialLocations[currentLocationIndex + 1],
-        },
-      });
+      const newHp = gameState.Player.hp - (Math.floor(Math.random() * 10) + 10);
+      if (newHp <= 0) {
+        gameDefeat();
+      } else {
+        setGameState({
+          ...gameState,
+          Player: {
+            ...gameState.Player,
+            currentLocation: DATA_LOCATIONS[currentLocationIndex + 1],
+            hp: newHp,
+          },
+        });
+      }
     }
-
   }
 
   const contextValue: DataStoreContextType = {
