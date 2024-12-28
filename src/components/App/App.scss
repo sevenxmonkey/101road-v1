@@ -7,13 +7,14 @@ body {
   background-color: black;
   color: greenyellow;
   margin: 0;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .container {
   display: flex;
   border: 2px solid greenyellow;
-  height: 100vh;
-  width: 100vw;
+  height: 100svh;
+  width: 100svw;
 
 }
 
