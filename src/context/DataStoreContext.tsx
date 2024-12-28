@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useState } from 'react';
+import React, { createContext, useContext, ReactNode, useState, useMemo } from 'react';
 import { DataStoreContextType, GameStatus, Player, Event, EventType } from '../interfaces';
 import { DATA_LOCATIONS } from '../components/data/location';
 import { generateRandomSupplies } from '../components/data/supply';
@@ -95,18 +95,52 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     }
   }
 
+  const hasLooted = useMemo(() =>
+    Boolean(logs.find(log =>
+      log.type === EventType.LootSupply && log.data?.LootSupplyEvent?.location.id === player.currentLocation.id
+    )), [logs, player]);
+
+  const lootSupply = () => {
+    // check if the player has already looted the location
+    if (hasLooted) {
+      return;
+    }
+
+    const newSupplies = generateRandomSupplies();
+    const combinedSupplies = newSupplies.reduce((acc, newSupply) => {
+      const existingSupply = acc.find(s => s.supply.id === newSupply.supply.id);
+      if (existingSupply) {
+        existingSupply.quantity += newSupply.quantity;
+      } else {
+        acc.push(newSupply);
+      }
+      return acc;
+    }, [...inventory.supplies]);
+    setInventory({ ...inventory, supplies: combinedSupplies });
+
+    const lootSupplyEvent: Event = {
+      type: EventType.LootSupply,
+      message: `Found ${newSupplies.map(s => s.supply.name).join(', ')}`,
+      data: { LootSupplyEvent: { supplies: newSupplies, location: player.currentLocation } }
+    }
+    setLogs([...logs, lootSupplyEvent]);
+  }
+
   const contextValue: DataStoreContextType = {
     // Data
     player,
     inventory,
     gameStatus,
-    // logs
-    logs,
+    hasLooted,
+    // Platyer actions
+    driveNext,
+    consumeSupply,
+    lootSupply,
     // Game Actions
     startGame,
     endGame,
-    driveNext,
-    consumeSupply,
+    // logs
+    logs,
   };
 
   return (

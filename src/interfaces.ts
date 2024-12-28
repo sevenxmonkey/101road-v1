@@ -5,8 +5,10 @@ export interface DataStoreContextType {
   endGame: () => void;
   /* Player Actions */
   player: Player;
+  hasLooted: boolean;
   driveNext: () => void;
   consumeSupply: (supplyId: string) => void;
+  lootSupply: () => void;
   /* Inventory */
   inventory: {
     weapons: { weapon: Weapon; quantity: number }[];
@@ -48,7 +50,7 @@ export enum EventType {
   DeductHP = 'deductHP',
   Explore = 'explore',
   ConsumeSupply = 'consumeSupply',
-  FoundSupply = 'foundSupply',
+  LootSupply = 'lootSupply',
   FoundWeapon = 'foundWeapon',
   GameVictory = 'gameVictory',
   GameDefeat = 'gameDefeat',
@@ -72,7 +74,11 @@ export interface Event {
     },
     ConsumeSupplyEvent?: {
       supply: Supply;
-    }
+    },
+    LootSupplyEvent?: {
+      location: Location;
+      supplies: { supply: Supply, quantity: number }[];
+    },
   }
 }
 

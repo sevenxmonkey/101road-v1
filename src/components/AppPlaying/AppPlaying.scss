@@ -1,9 +1,9 @@
-.playing-container{
+.playing-container {
   width: 100%;
   height: 100%;
   position: relative;
 
-  .status{
+  .status {
     height: 160px;
     border-bottom: 1px solid rgba(172, 255, 47, 0.2);
     width: 100%;
@@ -12,39 +12,44 @@
 
     display: flex;
 
-    .player{
+    .player {
       width: 160px;
       border-right: 1px solid rgba(172, 255, 47, 0.2);
-      
-      .player-photo{
+
+      .player-photo {
         height: 115px;
         padding: 5px;
       }
 
-      .player-point{
+      .player-point {
         height: 15px;
         margin: 5px;
-        &.player-hp{
+
+        &.player-hp {
           background-color: green;
         }
-        &.player-ap{
+
+        &.player-ap {
           background-color: blue;
         }
       }
     }
 
-    .location{
+    .location {
       padding: 5px;
       width: calc(100% - 160px);
-      .loc-name{
-        font-size:x-large;
+
+      .loc-name {
+        font-size: x-large;
         font-weight: 800;
       }
-      .loc-mile{
-        font-size:x-large;
+
+      .loc-mile {
+        font-size: x-large;
         color: white;
       }
-      .loc-desc{
+
+      .loc-desc {
         color: white;
         padding-top: 20px;
         font-size: small;
@@ -52,7 +57,7 @@
     }
   }
 
-  .history{
+  .history {
     padding: 0 10px;
     position: relative;
     top: 160px;
@@ -61,7 +66,8 @@
     overflow-y: auto;
 
     color: rgba(255, 255, 255, 0.3);
-    .active{
+
+    .active {
       color: rgba(255, 255, 255, 0.8);
     }
 
@@ -69,11 +75,14 @@
     ::-webkit-scrollbar {
       display: none;
     }
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 
-  .control{
+  .control {
     height: 300px;
     border-top: 1px solid rgba(172, 255, 47, 0.5);
     position: absolute;
@@ -82,9 +91,10 @@
 
     display: flex;
 
-    .actions{
+    .actions {
       position: relative;
-      button{
+
+      button {
         display: block;
         width: 100%;
         border: none;
@@ -92,7 +102,13 @@
         border-left: 1px solid rgba(172, 255, 47, 0.5);
         background-color: transparent;
 
-        &.end-game-btn{
+        &.disabled {
+          color: rgba(172, 255, 47, 0.2);
+          border-bottom: 1px solid rgba(172, 255, 47, 0.2);
+          border-left: 1px solid rgba(172, 255, 47, 0.2);
+        }
+
+        &.end-game-btn {
           border-top: 1px solid rgba(172, 255, 47, 0.5);
           position: absolute;
           bottom: 0;
@@ -104,18 +120,20 @@
       width: 250px;
       border-right: 1px solid rgba(172, 255, 47, 0.2);
 
-      .supplies{
+      .supplies {
         width: 100%;
 
-        .supply-item{
+        .supply-item {
           display: flex;
           justify-content: space-between;
           padding: 5px;
           border-bottom: 1px solid rgba(172, 255, 47, 0.2);
-          .supply-name{
+
+          .supply-name {
             font-size: large;
           }
-          .supply-qty{
+
+          .supply-qty {
             font-size: large;
           }
         }

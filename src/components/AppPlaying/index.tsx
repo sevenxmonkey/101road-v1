@@ -1,7 +1,7 @@
 import { useDataStore } from "../../context/DataStoreContext";
 import './AppPlaying.scss';
 const AppPlaying = () => {
-  const { player, inventory, endGame, logs, driveNext, consumeSupply } = useDataStore();
+  const { player, inventory, endGame, logs, driveNext, consumeSupply, lootSupply, hasLooted } = useDataStore();
   return (
     <div className="playing-container">
       <div className="status">
@@ -42,7 +42,7 @@ const AppPlaying = () => {
         </div>
         <div className='actions'>
           <button className="drive-btn" onClick={() => driveNext()}>Drive North</button>
-          <button className="explore-btn">Explore Town</button>
+          <button disabled={hasLooted} className={hasLooted ? "disabled explor-btn" : "explor-btn"} onClick={() => lootSupply()}>Explore Town</button>
           <button className="end-game-btn" onClick={() => endGame()}>End Journey</button>
         </div>
       </div>
