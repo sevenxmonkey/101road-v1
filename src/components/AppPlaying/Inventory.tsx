@@ -27,7 +27,7 @@ const SupplyItem = ({
 }
 
 const Inventory = () => {
-  const { inventory, consumeSupply } = useDataStore();
+  const { inventory, consumeSupply, throwAwaySupply } = useDataStore();
 
   const [consumeSupplyModalVisible, setConsumeSupplyModalVisible] = useState<string | undefined>();
   return (
@@ -52,14 +52,12 @@ const Inventory = () => {
           <SupplyItem
             supplyId={consumeSupplyModalVisible}
             onThrowAway={(id) => {
-              console.log('Throw away', id);
               setConsumeSupplyModalVisible(undefined);
+              id && throwAwaySupply(id);
             }}
             onConsume={(id) => {
               setConsumeSupplyModalVisible(undefined);
-              if (id) {
-                consumeSupply(id);
-              }
+              id && consumeSupply(id);
             }}
           />
         }

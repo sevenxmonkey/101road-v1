@@ -58,14 +58,17 @@
   }
 
   .history {
-    padding: 0 10px;
+    padding: 10px;
     position: relative;
     top: 160px;
     height: calc(100% - 460px);
-
     overflow-y: auto;
-
     color: rgba(255, 255, 255, 0.3);
+
+    .log{
+      padding: 2px;
+      font-family: 'Courier New', Courier, monospace;
+    }
 
     .active {
       color: rgba(255, 255, 255, 0.8);

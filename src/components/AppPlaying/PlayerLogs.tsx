@@ -5,9 +5,9 @@ const PlayerLogs = () => {
   return (
     <div className="history">
       {[...logs].reverse().map((log, index) => (
-        <p key={index} className={index === 0 ? "active log" : "log"}>
+        <div key={index} className={index === 0 ? "active log" : "log"}>
           {log.message}
-        </p>
+        </div>
       ))}
     </div>
   )

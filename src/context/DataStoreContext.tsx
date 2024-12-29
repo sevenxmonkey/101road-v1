@@ -70,6 +70,28 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     setLogs([...logs, ...events]);
   }
 
+  const throwAwaySupply = (supplyId: string) => {
+    const supply = inventory.supplies.find(s => s.supply.id === supplyId);
+    if (supply) {
+      // Deduct the supply from the inventory
+      const newSupplies = inventory.supplies.map(s => {
+        if (s.supply.id === supplyId) {
+          return { supply: s.supply, quantity: supply.quantity - 1 }
+        }
+        return s;
+      }).filter(s => s.quantity > 0);
+      setInventory({ ...inventory, supplies: newSupplies });
+
+      // Add a log for this event
+      const throwAwaySupplyEvent: Event = {
+        type: EventType.ThrowAwaySupply,
+        message: `Throwing away 1 ${supply.supply.name}`,
+        data: { ThrowAwaySupplyEvent: { supply: supply.supply } }
+      }
+      setLogs([...logs, throwAwaySupplyEvent]);
+    }
+  }
+
   const consumeSupply = (supplyId: string) => {
     const supply = inventory.supplies.find(s => s.supply.id === supplyId);
     if (supply) {
@@ -135,6 +157,7 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     // Platyer actions
     driveNext,
     consumeSupply,
+    throwAwaySupply,
     lootSupply,
     // Game Actions
     startGame,
