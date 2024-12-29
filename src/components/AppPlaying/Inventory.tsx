@@ -39,6 +39,7 @@ const Inventory = () => {
   const [consumeSupplyModalVisible, setConsumeSupplyModalVisible] = useState<string | undefined>();
   return (
     <div className="inventory">
+      <div className="trunk-title">Trunk</div>
       <div className="weapons">
         {inventory.weapons.map(({ weapon, quantity }, index) => (
           <div key={index}>{weapon.name} - {weapon.ap} (${quantity})</div>

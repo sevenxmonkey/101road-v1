@@ -5,7 +5,7 @@
 
   .status {
     height: 160px;
-    border-bottom: 1px solid rgba(172, 255, 47, 0.2);
+    border-bottom: 1px solid rgba(172, 255, 47, 0.8);
     width: 100%;
     position: absolute;
     top: 0;
@@ -19,10 +19,22 @@
       .player-photo {
         height: 115px;
         padding: 5px;
+        background-color: rgba(172, 255, 47, 0.5);
+
+        margin: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          max-width: 100%;
+          max-height: 100%;
+        }
+
       }
 
       .player-point {
-        height: 15px;
+        height: 12px;
         margin: 5px;
 
         &.player-hp {
@@ -38,6 +50,7 @@
     .location {
       padding: 5px;
       width: calc(100% - 160px);
+      overflow-y: auto;
 
       .loc-name {
         font-size: x-large;
@@ -50,7 +63,8 @@
       }
 
       .loc-desc {
-        color: white;
+        color: rgba(255, 255, 255, 0.3);
+
         padding-top: 20px;
         font-size: small;
       }
@@ -58,16 +72,22 @@
   }
 
   .history {
-    padding: 10px;
     position: relative;
     top: 160px;
     height: calc(100% - 460px);
     overflow-y: auto;
-    color: rgba(255, 255, 255, 0.3);
+
+    .diary-title {
+      width: 100%;
+      text-align: center;
+      background-color: rgb(31, 52, 0);
+      position: sticky;
+      top: 0;
+    }
 
     .log {
-      padding: 2px;
-      font-family: 'Courier New', Courier, monospace;
+      padding: 2px 5px;
+      color: rgba(255, 255, 255, 0.3);
     }
 
     .active {
@@ -87,7 +107,7 @@
 
   .control {
     height: 300px;
-    border-top: 1px solid rgba(172, 255, 47, 0.5);
+    border-top: 1px solid rgba(172, 255, 47, 0.8);
     position: absolute;
     width: 100%;
     bottom: 0;
@@ -122,6 +142,26 @@
     .inventory {
       width: 250px;
       border-right: 1px solid rgba(172, 255, 47, 0.2);
+      overflow: auto;
+      position: relative;
+
+      /** Hide scrollbar for Chrome, Safari and Opera */
+      ::-webkit-scrollbar {
+        display: none;
+      }
+
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      scrollbar-width: none;
+      /* Firefox */
+
+      .trunk-title {
+        width: 100%;
+        text-align: center;
+        background-color: rgb(31, 52, 0);
+        position: sticky;
+        top: 0;
+      }
 
       .supplies,
       .supply-item-modal {
@@ -140,7 +180,7 @@
           padding: 20px 5px;
         }
 
-        .item-actions{
+        .item-actions {
           margin-top: 20px;
           width: 100%;
           display: flex;
@@ -155,6 +195,18 @@
 
     .actions {
       width: calc(100% - 160px);
+    }
+  }
+
+  .vh-img {
+    position: absolute;
+    width: 100%;
+    bottom: 300px;
+
+    img {
+      width: 60%;
+      display: block;
+      margin: 0 auto;
     }
   }
 }
