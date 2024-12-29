@@ -1,4 +1,5 @@
-import { Weapon } from "../../interfaces";
+
+import { Weapon } from "../interfaces";
 import { getRandomInt } from "../utils";
 
 const DATA_WEAPONS: Weapon[] = [

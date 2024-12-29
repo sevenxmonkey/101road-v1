@@ -1,4 +1,5 @@
-import { Supply } from "../../interfaces";
+
+import { Supply } from "../interfaces";
 import { getRandomInt } from "../utils";
 
 const DATA_SUPPLIES_FOOD: Supply[] = [

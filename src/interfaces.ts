@@ -5,18 +5,32 @@ export interface DataStoreContextType {
   endGame: () => void;
   /* Player Actions */
   player: Player;
-  hasLooted: boolean;
+  hasExplored: boolean;
   driveNext: () => void;
   consumeSupply: (supplyId: string) => void;
   throwAwaySupply: (supplyId: string) => void;
   throwAwayWeapon: (weaponId: string) => void;
-  lootSupply: () => void;
+  explore: () => void;
   equipWeapon: (weaponId: string) => void;
   unequipWeapon: (weaponId: string) => void;
   /* Inventory */
   inventory: Inventory
+  /** Fight */
+  fight: Fight;
   /* Logs */
   logs: Event[];
+}
+
+export enum FightStatus {
+  Fighting = 'fighting',
+  Won = 'won',
+  Lost = 'lost',
+  None = 'none',
+}
+
+export interface Fight {
+  fightStatus: FightStatus;
+  enemy?: Enemy;
 }
 
 export interface Inventory {
@@ -64,6 +78,8 @@ export enum EventType {
   ThrowAwayWeapon = 'throwAwayWeapon',
   GameVictory = 'gameVictory',
   GameDefeat = 'gameDefeat',
+  // Fight events
+  FightStart = 'fightStart',
 }
 
 export interface Event {
@@ -104,7 +120,11 @@ export interface Event {
     },
     UnequipWeaponEvent?: {
       weapon: Weapon;
-    }
+    },
+    FightStartEvent?: {
+      location: Location;
+      enemy: Enemy;
+    },
   }
 }
 
@@ -112,7 +132,6 @@ export interface Enemy {
   name: string;
   hp: number; /* Health Points */
   ap: number; /* Attack Points */
-  xp: number; /* Experience Points */
 }
 
 export interface Weapon {

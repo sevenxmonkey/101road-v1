@@ -1,8 +1,9 @@
 import React, { createContext, useContext, ReactNode, useState, useMemo } from 'react';
-import { DataStoreContextType, GameStatus, Player, Event, EventType, Inventory } from '../interfaces';
-import { DATA_LOCATIONS } from '../components/data/location';
-import { generateRandomSupplies } from '../components/data/supply';
-import { generateRandomWeapon } from '../components/data/weapon';
+import { DataStoreContextType, GameStatus, Player, Event, EventType, Inventory, FightStatus } from '../interfaces';
+import { DATA_LOCATIONS } from '../data/location';
+import { generateRandomSupplies } from '../data/supply';
+import { generateRandomWeapon } from '../data/weapon';
+import { generateRandomEnemy } from '../data/enemy';
 
 const initialPlayer: Player = {
   name: 'Seven X',
@@ -19,6 +20,8 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     weapons: [],
     supplies: generateRandomSupplies()
   });
+  const [fight, setFight] = useState({ fightStatus: FightStatus.None });
+
   const [gameStatus, setGameStatus] = useState(GameStatus.MainMenu);
   const [logs, setLogs] = useState<Event[]>([]);
 
@@ -169,17 +172,40 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     }
   }
 
-  const hasLooted = useMemo(() =>
-    Boolean(logs.find(log =>
-      log.type === EventType.LootSupply && log.data?.LootSupplyEvent?.location.id === player.currentLocation.id
-    )), [logs, player]);
+  const hasExplored = useMemo(() => {
+    const hasFighted = logs.some(log => log.type === EventType.FightStart && log.data.FightStartEvent?.location.id === player.currentLocation.id);
+    const hasLooted = logs.some(log => log.type === EventType.LootSupply && log.data.LootSupplyEvent?.location.id === player.currentLocation.id);
+    return hasFighted || hasLooted;
+  }, [player.currentLocation, logs]);
 
-  const lootSupply = () => {
+  const explore = () => {
     // check if the player has already looted the location
-    if (hasLooted) {
+    if (hasExplored) {
       return;
     }
+    // 50% chance of trigger a fight
+    if (Math.random() < 0.8) {
+      onStartFight()
+    } else {
+      lootSupply();
+    }
+  }
 
+  const onStartFight = () => {
+    const fightEvents: Event[] = [];
+    const enemy = generateRandomEnemy();
+    setFight({ fightStatus: FightStatus.Fighting });
+    fightEvents.push({
+      type: EventType.FightStart,
+      message: `Encounter a ${enemy.name}`,
+      data: {
+        FightStartEvent: { enemy, location: player.currentLocation }
+      }
+    })
+    setLogs([...logs, ...fightEvents]);
+  }
+
+  const lootSupply = () => {
     const lootEvents: Event[] = [];
 
     const newSupplies = generateRandomSupplies();
@@ -227,12 +253,13 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     player,
     inventory,
     gameStatus,
-    hasLooted,
+    hasExplored,
+    fight,
     // Platyer actions
     driveNext,
     consumeSupply,
     throwAwaySupply,
-    lootSupply,
+    explore,
     throwAwayWeapon,
     equipWeapon,
     unequipWeapon,
