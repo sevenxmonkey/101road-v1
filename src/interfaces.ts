@@ -9,7 +9,10 @@ export interface DataStoreContextType {
   driveNext: () => void;
   consumeSupply: (supplyId: string) => void;
   throwAwaySupply: (supplyId: string) => void;
+  throwAwayWeapon: (weaponId: string) => void;
   lootSupply: () => void;
+  equipWeapon: (weaponId: string) => void;
+  unequipWeapon: (weaponId: string) => void;
   /* Inventory */
   inventory: Inventory
   /* Logs */
@@ -58,6 +61,7 @@ export enum EventType {
   LootWeapon = 'foundWeapon',
   EquipWeapon = 'equipWeapon',
   UnequipWeapon = 'unequipWeapon',
+  ThrowAwayWeapon = 'throwAwayWeapon',
   GameVictory = 'gameVictory',
   GameDefeat = 'gameDefeat',
 }
@@ -84,6 +88,9 @@ export interface Event {
     ThrowAwaySupplyEvent?: {
       supply: Supply;
     }
+    ThrowAwayWeaponEvent?: {
+      weapon: Weapon;
+    },
     LootSupplyEvent?: {
       location: Location;
       supplies: { supply: Supply, quantity: number }[];
@@ -92,6 +99,12 @@ export interface Event {
       location: Location;
       weapon: Weapon;
     },
+    EquipWeaponEvent?: {
+      weapon: Weapon;
+    },
+    UnequipWeaponEvent?: {
+      weapon: Weapon;
+    }
   }
 }
 

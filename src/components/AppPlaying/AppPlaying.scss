@@ -173,6 +173,10 @@
           justify-content: space-between;
           padding: 5px;
           border-bottom: 1px solid rgba(172, 255, 47, 0.2);
+
+          &.equiped {
+            border: 1px solid #0070ff;
+          }
         }
       }
 
@@ -189,6 +193,11 @@
 
           button {
             width: 45%;
+
+            &:disabled {
+              color: rgba(172, 255, 47, 0.2);
+              border: 1px solid rgba(172, 255, 47, 0.2);
+            }
           }
         }
       }

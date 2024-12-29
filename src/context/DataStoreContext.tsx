@@ -93,6 +93,57 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     }
   }
 
+  const equipWeapon = (weaponId: string) => {
+    const weapon = inventory.weapons.find(w => w.weapon.id === weaponId);
+    if (weapon) {
+      setPlayer({ ...player, equipped: weapon.weapon });
+
+      // Add a log for this event
+      const equipWeaponEvent: Event = {
+        type: EventType.EquipWeapon,
+        message: `Equipping 1 ${weapon.weapon.name}`,
+        data: { EquipWeaponEvent: { weapon: weapon.weapon } }
+      }
+      setLogs([...logs, equipWeaponEvent]);
+    }
+  }
+
+  const unequipWeapon = () => {
+    if (player.equipped) {
+      setPlayer({ ...player, equipped: undefined });
+
+      // Add a log for this event
+      const unequipWeaponEvent: Event = {
+        type: EventType.UnequipWeapon,
+        message: `Unequipping 1 ${player.equipped.name}`,
+        data: { UnequipWeaponEvent: { weapon: player.equipped } }
+      }
+      setLogs([...logs, unequipWeaponEvent]);
+    }
+  }
+
+  const throwAwayWeapon = (weaponId: string) => {
+    const weapon = inventory.weapons.find(w => w.weapon.id === weaponId);
+    if (weapon) {
+      // Deduct the weapon from the inventory
+      const newWeapons = inventory.weapons.map(w => {
+        if (w.weapon.id === weaponId) {
+          return { weapon: w.weapon, quantity: weapon.quantity - 1 }
+        }
+        return w;
+      }).filter(w => w.quantity > 0);
+      setInventory({ ...inventory, weapons: newWeapons });
+
+      // Add a log for this event
+      const throwAwayWeaponEvent: Event = {
+        type: EventType.ThrowAwayWeapon,
+        message: `Throwing away 1 ${weapon.weapon.name}`,
+        data: { ThrowAwayWeaponEvent: { weapon: weapon.weapon } }
+      }
+      setLogs([...logs, throwAwayWeaponEvent]);
+    }
+  }
+
   const consumeSupply = (supplyId: string) => {
     const supply = inventory.supplies.find(s => s.supply.id === supplyId);
     if (supply) {
@@ -182,6 +233,9 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     consumeSupply,
     throwAwaySupply,
     lootSupply,
+    throwAwayWeapon,
+    equipWeapon,
+    unequipWeapon,
     // Game Actions
     startGame,
     endGame,
