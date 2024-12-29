@@ -1,7 +1,8 @@
 import React, { createContext, useContext, ReactNode, useState, useMemo } from 'react';
-import { DataStoreContextType, GameStatus, Player, Event, EventType } from '../interfaces';
+import { DataStoreContextType, GameStatus, Player, Event, EventType, Inventory } from '../interfaces';
 import { DATA_LOCATIONS } from '../components/data/location';
 import { generateRandomSupplies } from '../components/data/supply';
+import { generateRandomWeapon } from '../components/data/weapon';
 
 const initialPlayer: Player = {
   name: 'Seven X',
@@ -14,7 +15,7 @@ const DataStoreContext = createContext<DataStoreContextType | undefined>(undefin
 export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const [player, setPlayer] = useState(initialPlayer);
-  const [inventory, setInventory] = useState({
+  const [inventory, setInventory] = useState<Inventory>({
     weapons: [],
     supplies: generateRandomSupplies()
   });
@@ -128,6 +129,8 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
       return;
     }
 
+    const lootEvents: Event[] = [];
+
     const newSupplies = generateRandomSupplies();
     const combinedSupplies = newSupplies.reduce((acc, newSupply) => {
       const existingSupply = acc.find(s => s.supply.id === newSupply.supply.id);
@@ -138,14 +141,34 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
       }
       return acc;
     }, [...inventory.supplies]);
-    setInventory({ ...inventory, supplies: combinedSupplies });
-
-    const lootSupplyEvent: Event = {
+    lootEvents.push({
       type: EventType.LootSupply,
       message: `Found ${newSupplies.map(s => s.supply.name).join(', ')}`,
       data: { LootSupplyEvent: { supplies: newSupplies, location: player.currentLocation } }
+    })
+
+    let combinedWeapons = [...inventory.weapons];
+    if (Math.random() < 0.5) {
+      const newWeapon = generateRandomWeapon();
+      combinedWeapons = inventory.weapons.map(w => {
+        if (w.weapon.id === newWeapon.id) {
+          return { weapon: w.weapon, quantity: w.quantity + 1 };
+        }
+        return w;
+      });
+      if (!combinedWeapons.find(w => w.weapon.id === newWeapon.id)) {
+        combinedWeapons.push({ weapon: newWeapon, quantity: 1 });
+      }
+      lootEvents.push(
+        {
+          type: EventType.LootWeapon,
+          message: `Found weapon ${newWeapon.name}`,
+          data: { LootWeaponEvent: { weapon: newWeapon, location: player.currentLocation } }
+        }
+      )
     }
-    setLogs([...logs, lootSupplyEvent]);
+    setInventory({ ...inventory, supplies: combinedSupplies, weapons: combinedWeapons });
+    setLogs([...logs, ...lootEvents]);
   }
 
   const contextValue: DataStoreContextType = {

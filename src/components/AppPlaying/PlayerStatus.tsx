@@ -1,5 +1,5 @@
 import { useDataStore } from "../../context/DataStoreContext";
-import playerImage from "../../assets/ch2.png";
+import playerImage from "../../assets/ch1.png";
 
 const PlayerStatus = () => {
   const { player } = useDataStore();

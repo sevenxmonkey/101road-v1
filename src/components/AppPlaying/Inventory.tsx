@@ -42,7 +42,11 @@ const Inventory = () => {
       <div className="trunk-title">Trunk</div>
       <div className="weapons">
         {inventory.weapons.map(({ weapon, quantity }, index) => (
-          <div key={index}>{weapon.name} - {weapon.ap} (${quantity})</div>
+          <div className="supply-item" key={index}>
+            <span style={{ color: "#0070ff" }}>{weapon.name}</span>
+            <span style={{ color: "blue" }}>+{weapon.ap}</span>
+            <span style={{ color: "white" }}>[{quantity}]</span>
+          </div>
         ))}
       </div>
       <div className="supplies">
