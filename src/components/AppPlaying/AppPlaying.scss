@@ -65,7 +65,7 @@
     overflow-y: auto;
     color: rgba(255, 255, 255, 0.3);
 
-    .log{
+    .log {
       padding: 2px;
       font-family: 'Courier New', Courier, monospace;
     }
@@ -123,7 +123,8 @@
       width: 250px;
       border-right: 1px solid rgba(172, 255, 47, 0.2);
 
-      .supplies {
+      .supplies,
+      .supply-item-modal {
         width: 100%;
 
         .supply-item {
@@ -131,13 +132,22 @@
           justify-content: space-between;
           padding: 5px;
           border-bottom: 1px solid rgba(172, 255, 47, 0.2);
+        }
+      }
 
-          .supply-name {
-            font-size: large;
-          }
+      .supply-item-modal {
+        .description {
+          padding: 20px 5px;
+        }
 
-          .supply-qty {
-            font-size: large;
+        .item-actions{
+          margin-top: 20px;
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+
+          button {
+            width: 45%;
           }
         }
       }

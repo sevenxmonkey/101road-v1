@@ -17,11 +17,18 @@ const SupplyItem = ({
     return null;
   }
   return (
-    <div>
-      <div>{supply.supply.name} - {supply.supply.hp} - {supply.quantity}</div>
-      <div>{supply.supply.description}</div>
-      <button onClick={() => onThrowAway(supplyId)}>Throw away</button>
-      <button onClick={() => onConsume(supplyId)}>Consume</button>
+    <div className="supply-item-modal">
+      <div className="supply-item">
+        {supply.supply.name}
+        <span style={{ color: 'green' }}>+{supply.supply.hp} Health</span>
+        <span style={{ color: "white" }}>[{supply.quantity}]</span>
+      </div>
+      <div className="description">{supply.supply.description}</div>
+      <div className="item-actions">
+        <button onClick={() => onConsume(supplyId)}>Consume</button>
+        <button onClick={() => onThrowAway(supplyId)}>Throw away</button>
+      </div>
+
     </div>
   )
 }
@@ -48,6 +55,7 @@ const Inventory = () => {
       </div>
       <Dialog
         isVisible={!!consumeSupplyModalVisible}
+        onDismiss={() => setConsumeSupplyModalVisible(undefined)}
         message={
           <SupplyItem
             supplyId={consumeSupplyModalVisible}
