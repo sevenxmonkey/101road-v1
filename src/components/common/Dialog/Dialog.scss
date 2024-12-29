@@ -20,3 +20,13 @@
   max-height: 90%;
   margin: auto;
 }
+
+@media (min-width: 600px) {
+  .dialog-overlay {
+    height: 820px;
+    width: 500px;
+    top: calc(50% - 4px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
