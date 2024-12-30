@@ -1,0 +1,1 @@
+export const POSIBILITY_MEET_ENEMY = 0.5;

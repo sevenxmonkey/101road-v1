@@ -16,6 +16,7 @@ export interface DataStoreContextType {
   unequipWeapon: (weaponId: string) => void;
   wonFight: () => void;
   runAway: () => void;
+  onFighting: () => void;
   /* Inventory */
   inventory: Inventory
   /** Fight */
@@ -25,6 +26,7 @@ export interface DataStoreContextType {
 }
 
 export enum FightStatus {
+  MeetEnemy = 'meetEnemy',
   Fighting = 'fighting',
   Won = 'won',
   Lost = 'lost',
@@ -82,7 +84,8 @@ export enum EventType {
   GameVictory = 'gameVictory',
   GameDefeat = 'gameDefeat',
   // Fight events
-  FightStart = 'fightStart',
+  MeetEnemy = 'meetEnemy',
+  Fighting = 'fighting',
   FightWon = 'fightWon',
 }
 
@@ -125,7 +128,11 @@ export interface Event {
     UnequipWeaponEvent?: {
       weapon: Weapon;
     },
-    FightStartEvent?: {
+    MeetEnemyEvent?: {
+      location: Location;
+      enemy: Enemy;
+    },
+    FightingEvent?: {
       location: Location;
       enemy: Enemy;
     },

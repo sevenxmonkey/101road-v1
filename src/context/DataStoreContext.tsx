@@ -4,6 +4,7 @@ import { DATA_LOCATIONS } from '../data/location';
 import { generateRandomSupplies } from '../data/supply';
 import { generateRandomWeapon } from '../data/weapon';
 import { generateRandomEnemy } from '../data/enemy';
+import { POSIBILITY_MEET_ENEMY } from '../utils/constants';
 
 const initialPlayer: Player = {
   name: 'Seven X',
@@ -177,7 +178,7 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
   }
 
   const hasExplored = useMemo(() => {
-    const hasFighted = logs.some(log => log.type === EventType.FightStart && log.data.FightStartEvent?.location.id === player.currentLocation.id);
+    const hasFighted = logs.some(log => log.type === EventType.MeetEnemy && log.data.MeetEnemyEvent?.location.id === player.currentLocation.id);
     const hasLooted = logs.some(log => log.type === EventType.LootSupply && log.data.LootSupplyEvent?.location.id === player.currentLocation.id);
     return hasFighted || hasLooted;
   }, [player.currentLocation, logs]);
@@ -188,22 +189,38 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
       return;
     }
     // 50% chance of trigger a fight
-    if (Math.random() < 0.8) {
-      onStartFight()
+    if (Math.random() < POSIBILITY_MEET_ENEMY) {
+      onMeetEnemy()
     } else {
       lootSupply();
     }
   }
 
-  const onStartFight = () => {
+  const onFighting = () => {
+    if (fight.enemy) {
+      const fightEvents: Event[] = [];
+      setFight({ fightStatus: FightStatus.Fighting, enemy: fight.enemy });
+      fightEvents.push({
+        type: EventType.Fighting,
+        message: `Fighting with a ${fight.enemy?.name}`,
+        data: {
+          MeetEnemyEvent: { enemy: fight.enemy, location: player.currentLocation }
+        }
+      })
+      setLogs([...logs, ...fightEvents]);
+    }
+
+  }
+
+  const onMeetEnemy = () => {
     const fightEvents: Event[] = [];
     const enemy = generateRandomEnemy();
-    setFight({ fightStatus: FightStatus.Fighting, enemy });
+    setFight({ fightStatus: FightStatus.MeetEnemy, enemy });
     fightEvents.push({
-      type: EventType.FightStart,
+      type: EventType.MeetEnemy,
       message: `Encounter a ${enemy.name}`,
       data: {
-        FightStartEvent: { enemy, location: player.currentLocation }
+        MeetEnemyEvent: { enemy, location: player.currentLocation }
       }
     })
     setLogs([...logs, ...fightEvents]);
@@ -224,10 +241,10 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     const runAwayEvents: Event[] = [];
     // Deduct player 10HP
     const newHp = player.hp - 10;
-    if(newHp <= 0) {
+    if (newHp <= 0) {
       gameDefeat();
       return;
-    }else{
+    } else {
       setPlayer({ ...player, hp: newHp });
       runAwayEvents.push({
         type: EventType.DeductHP,
@@ -295,8 +312,6 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     gameStatus,
     hasExplored,
     fight,
-    wonFight,
-    runAway,
     // Platyer actions
     driveNext,
     consumeSupply,
@@ -305,6 +320,9 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     throwAwayWeapon,
     equipWeapon,
     unequipWeapon,
+    runAway,
+    onFighting,
+    wonFight,
     // Game Actions
     startGame,
     endGame,
