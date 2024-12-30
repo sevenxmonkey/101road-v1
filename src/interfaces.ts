@@ -1,6 +1,7 @@
 export interface DataStoreContextType {
   /* Game Actions */
   gameStatus: GameStatus;
+  gameDefeat: () => void;
   startGame: () => void;
   endGame: () => void;
   /* Player Actions */
@@ -13,6 +14,8 @@ export interface DataStoreContextType {
   explore: () => void;
   equipWeapon: (weaponId: string) => void;
   unequipWeapon: (weaponId: string) => void;
+  wonFight: () => void;
+  runAway: () => void;
   /* Inventory */
   inventory: Inventory
   /** Fight */
@@ -80,6 +83,7 @@ export enum EventType {
   GameDefeat = 'gameDefeat',
   // Fight events
   FightStart = 'fightStart',
+  FightWon = 'fightWon',
 }
 
 export interface Event {
@@ -125,6 +129,10 @@ export interface Event {
       location: Location;
       enemy: Enemy;
     },
+    FightWonEvent?: {
+      location: Location;
+      enemy?: Enemy;
+    },
   }
 }
 
@@ -132,6 +140,7 @@ export interface Enemy {
   name: string;
   hp: number; /* Health Points */
   ap: number; /* Attack Points */
+  description: string;
 }
 
 export interface Weapon {

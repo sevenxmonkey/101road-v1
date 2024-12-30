@@ -1,5 +1,5 @@
 import React, { createContext, useContext, ReactNode, useState, useMemo } from 'react';
-import { DataStoreContextType, GameStatus, Player, Event, EventType, Inventory, FightStatus } from '../interfaces';
+import { DataStoreContextType, GameStatus, Player, Event, EventType, Inventory, FightStatus, Fight } from '../interfaces';
 import { DATA_LOCATIONS } from '../data/location';
 import { generateRandomSupplies } from '../data/supply';
 import { generateRandomWeapon } from '../data/weapon';
@@ -20,7 +20,7 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     weapons: [],
     supplies: generateRandomSupplies()
   });
-  const [fight, setFight] = useState({ fightStatus: FightStatus.None });
+  const [fight, setFight] = useState<Fight>({ fightStatus: FightStatus.None });
 
   const [gameStatus, setGameStatus] = useState(GameStatus.MainMenu);
   const [logs, setLogs] = useState<Event[]>([]);
@@ -29,12 +29,16 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
   const startGame = () => setGameStatus(GameStatus.Playing);
   const endGame = () => resetAll();
   const gameVictory = () => setGameStatus(GameStatus.Victory);
-  const gameDefeat = () => setGameStatus(GameStatus.Defeat);
+  const gameDefeat = () => {
+    resetAll();
+    setGameStatus(GameStatus.Defeat);
+  };
   const resetAll = () => {
     setPlayer(initialPlayer);
     setGameStatus(GameStatus.MainMenu);
     setLogs([]);
-    setInventory({ weapons: [], supplies: generateRandomSupplies() })
+    setInventory({ weapons: [], supplies: generateRandomSupplies() });
+    setFight({ fightStatus: FightStatus.None });
   }
 
   const driveNext = () => {
@@ -52,13 +56,13 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
         data: { DrivingEvent: { from, to } }
       })
 
-      const deducHP = Math.floor(Math.random() * 10) + 10;
+      const deducHP = Math.floor(Math.random() * 40) + 30;
       events.push({
         type: EventType.DeductHP,
         message: `Deducting ${deducHP} HP`,
         data: { DeductHPEvent: { hp: deducHP } }
       });
-      const newHp = player.hp - (Math.floor(Math.random() * 10) + 10);
+      const newHp = player.hp - deducHP;
       if (newHp <= 0) {
         gameDefeat();
         // TODO: Add a log for this event
@@ -194,7 +198,7 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
   const onStartFight = () => {
     const fightEvents: Event[] = [];
     const enemy = generateRandomEnemy();
-    setFight({ fightStatus: FightStatus.Fighting });
+    setFight({ fightStatus: FightStatus.Fighting, enemy });
     fightEvents.push({
       type: EventType.FightStart,
       message: `Encounter a ${enemy.name}`,
@@ -203,6 +207,42 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
       }
     })
     setLogs([...logs, ...fightEvents]);
+  }
+
+  const wonFight = () => {
+    // Add a log for this event
+    const fightWonEvent: Event = {
+      type: EventType.FightWon,
+      message: `You won the fight with ${fight.enemy?.name!}!`,
+      data: { FightWonEvent: { location: player.currentLocation, enemy: fight.enemy } }
+    }
+    setLogs([...logs, fightWonEvent]);
+    setFight({ fightStatus: FightStatus.None });
+  }
+
+  const runAway = () => {
+    const runAwayEvents: Event[] = [];
+    // Deduct player 10HP
+    const newHp = player.hp - 10;
+    if(newHp <= 0) {
+      gameDefeat();
+      return;
+    }else{
+      setPlayer({ ...player, hp: newHp });
+      runAwayEvents.push({
+        type: EventType.DeductHP,
+        message: `Deducting 10 HP`,
+        data: { DeductHPEvent: { hp: 10 } }
+      })
+    }
+    // Add a log for this event
+    runAwayEvents.push({
+      type: EventType.FightWon,
+      message: `You ran away from the fight with ${fight.enemy?.name!}!`,
+      data: { FightWonEvent: { location: player.currentLocation, enemy: fight.enemy } }
+    })
+    setLogs([...logs, ...runAwayEvents]);
+    setFight({ fightStatus: FightStatus.None });
   }
 
   const lootSupply = () => {
@@ -255,6 +295,8 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     gameStatus,
     hasExplored,
     fight,
+    wonFight,
+    runAway,
     // Platyer actions
     driveNext,
     consumeSupply,
@@ -266,6 +308,7 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
     // Game Actions
     startGame,
     endGame,
+    gameDefeat,
     // logs
     logs,
   };

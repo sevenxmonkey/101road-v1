@@ -1,3 +1,5 @@
+import { Enemy } from "../interfaces";
+
 const DATA_ENEMIES = [
   {
     id: "enemy_001",
@@ -99,7 +101,7 @@ const DATA_ENEMIES = [
   }
 ];
 
-export const generateRandomEnemy = () => {
+export const generateRandomEnemy = (): Enemy => {
   const randomIndex = Math.floor(Math.random() * DATA_ENEMIES.length);
   return DATA_ENEMIES[randomIndex];
 }

@@ -1,0 +1,32 @@
+.fight-container {
+  border: 1px solid red;
+  background-color: rgba(255, 0, 0, 0.2);
+  color: red;
+  text-align: center;
+
+  padding: 20px;
+
+  .fight-stats {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .fight-actions {
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-between;
+
+    .fight-btn {
+      background-color: rgba(255, 0, 0, 0.2);
+      color: red;
+      border: 1px solid red;
+      cursor: pointer;
+    }
+  }
+
+  .fight-result-btn {
+    margin-top: 20px;
+  }
+}
