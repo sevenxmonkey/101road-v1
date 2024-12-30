@@ -56,7 +56,7 @@ export const DataStoreProvider: React.FC<{ children: ReactNode }> = ({ children 
         data: { DrivingEvent: { from, to } }
       })
 
-      const deducHP = Math.floor(Math.random() * 40) + 30;
+      const deducHP = Math.floor(Math.random() * 30) + 20;
       events.push({
         type: EventType.DeductHP,
         message: `Deducting ${deducHP} HP`,
